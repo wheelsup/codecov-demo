@@ -12,25 +12,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"   # or whichever version you need
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest coverage
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
 
-      - name: Run tests with coverage
-        run: |
-          coverage run -m pytest
-          coverage xml   # generates coverage.xml report
+      # (Optional) install pytest if you plan to add tests
+      - name: Install test dependencies
+        run: pip install pytest
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # only required for private repos
+      # Run unit tests
+      - name: Run tests
+        run: pytest -v
